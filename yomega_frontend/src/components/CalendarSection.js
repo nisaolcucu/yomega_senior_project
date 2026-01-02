@@ -67,29 +67,49 @@ export default function CalendarSection() {
 
   return (
     <section className="course section" id="course" style={{ padding: '80px 20px' }}>
-      <div className="center-text" style={{ marginBottom: '40px' }}>
-        <h5 style={{ color: 'var(--main-color)', fontSize: '16px', fontWeight: '600', letterSpacing: '2px' }}>
+      {/* ✅ Başlıklar - Ortalanmış */}
+      <div style={{ 
+        textAlign: 'center', 
+        marginBottom: '60px',
+        maxWidth: '900px',
+        margin: '0 auto 60px'
+      }}>
+        <h5 style={{ 
+          color: 'var(--main-color)', 
+          fontSize: '16px', 
+          fontWeight: '600', 
+          letterSpacing: '2px',
+          marginBottom: '15px'
+        }}>
           ETKİNLİKLER
         </h5>
-        <h2 style={{ fontSize: '42px', fontWeight: '700', marginTop: '10px' }}>
+        
+        <h2 style={{ 
+          fontSize: '42px', 
+          fontWeight: '700', 
+          margin: '0 0 20px 0',
+          lineHeight: '1.2'
+        }}>
           Yaklaşan Etkinliklerimiz
         </h2>
+        
         <p style={{
           fontSize: '17px',
           color: '#666',
-          maxWidth: '800px',
-          margin: '20px auto 0',
-          lineHeight: '1.7'
+          lineHeight: '1.8',
+          marginBottom: '15px'
         }}>
           Yurtiçinden ve yurtdışından alanında uzman, araştırmalar yapan değerli davetli 
           konuşmacıları Zoom üzerinden konuşma yapmaları için ve YÖMEGA üyeleri ile 
           bilgi alışverişinde buluşturuyoruz.
         </p>
+        
         <p style={{
           fontSize: '16px',
           color: '#888',
-          marginTop: '15px',
-          fontStyle: 'italic'
+          lineHeight: '1.7',
+          fontStyle: 'italic',
+          margin: 0
         }}>
           Konuşmacılar; eğitim gelişimi, öğretim elemanı mükemmeliyeti, öğrenme ve 
           öğretme merkezleri ve eğitim geliştiricilerine ilişkin güncel ve yenilikçi konularda 

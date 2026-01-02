@@ -88,6 +88,7 @@ const donationRoutes = require('./routes/donations');
 const searchRoutes = require('./routes/search');
 const chatRoutes = require('./routes/chat');
 const membershipFormRoutes = require('./routes/membershipFormRoutes'); // ✅ YENİ
+const adminRoutes = require('./routes/admin'); // ✅ YENİ
 
 app.use('/api/upload', uploadRoutes);
 app.use('/api/dashboard', dashboardRoutes);
@@ -107,6 +108,7 @@ app.use('/api/donations', donationRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/membership-forms', membershipFormRoutes); // ✅ YENİ
+app.use('/api/admin', adminRoutes); // ✅ YENİ
 
 const statsRoutes = require('./routes/stats');
 app.use('/api/stats', statsRoutes);

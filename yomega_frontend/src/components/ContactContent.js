@@ -73,37 +73,22 @@ export default function ContactContent() {
       ]
     },
     {
-      icon: 'bx bxs-phone',
-      title: 'Telefon',
-      details: [
-        '+90 212 123 45 67',
-        '+90 532 987 65 43'
-      ]
-    },
-    {
       icon: 'bx bxs-envelope',
       title: 'E-posta',
       details: [
         'info@yomega.org.tr',
-        'iletisim@yomega.org.tr'
+        'yomegatr@gmail.com'
       ]
     },
-    {
-      icon: 'bx bxs-time',
-      title: 'Çalışma Saatleri',
-      details: [
-        'Pazartesi - Cuma: 09:00 - 17:00',
-        'Hafta Sonu: Kapalı'
-      ]
-    }
+    
   ]
 
   const socialMedia = [
-    { icon: 'bx bxl-facebook', url: '#' },
-    { icon: 'bx bxl-twitter', url: '#' },
-    { icon: 'bx bxl-instagram', url: '#' },
-    { icon: 'bx bxl-linkedin', url: '#' },
-    { icon: 'bx bxl-youtube', url: '#' }
+    { icon: 'bx bxl-facebook', url: 'https://www.facebook.com/groups/819008085489766' },
+    { icon: 'bx bxl-twitter', url: 'https://x.com/YMEGA8' },
+    { icon: 'bx bxl-instagram', url: 'https://www.instagram.com/yomega2020/' },
+    { icon: 'bx bxl-linkedin', url: 'https://www.linkedin.com/groups/4787111/' },
+    { icon: 'bx bxl-youtube', url: 'https://www.youtube.com/@yomegaorg' }
   ]
 
   return (

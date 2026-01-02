@@ -14,11 +14,12 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
-        <StatsSection />
+        <AboutSection />
         <NewsSection />
         <CalendarSection />
+        <StatsSection />
         <PartnersSection />
-        <AboutSection />
+        
       </main>
       <Footer />
       

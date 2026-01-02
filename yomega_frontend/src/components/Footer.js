@@ -145,10 +145,25 @@ export default function Footer() {
         </div>
         <div className="footer-bottom-content">
           <div className="footer-bottom-links">
-            <a href="#">Designed by Elif Nisa Ölçücü & Fatma Betül Avcı</a>
-            
+            Designed by
+            <a
+              href="https://www.linkedin.com/in/elif-nisa-ölçücü-08984023b/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Elif Nisa Ölçücü
+            </a>
+            &amp;
+            <a
+              href="https://www.linkedin.com/in/fatma-betül-avcı-926b39254/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Fatma Betül Avcı
+            </a>
           </div>
         </div>
+
       </div>
     </footer>
   )

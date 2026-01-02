@@ -337,29 +337,10 @@ const AdminDashboard = () => {
 
     const memberData = monthlyData?.map(d => d.count) || [12, 19, 15, 25, 22, 30];
 
-    // Kategori verisi formatla
-    const categoryMap = {
-      'workshop': 'Workshop',
-      'seminer': 'Seminer',
-      'panel': 'Panel',
-      'konferans': 'Konferans',
-      'kurs': 'Kurs'
-    };
-
-    const categoryLabels = eventData?.map(d => categoryMap[d._id] || d._id)
-      || ['Workshop', 'Seminer', 'Panel', 'Konferans', 'Kurs'];
-
-    const categoryData = eventData?.map(d => d.totalParticipants) || [45, 62, 38, 55, 41];
-
-    // ✅ ÖNCE MEVCUT GRAFİKLERİ TEMİZLE
+    // ✅ MEVCUT GRAFİĞİ TEMİZLE
     const existingMemberChart = window.Chart.getChart('memberChart');
     if (existingMemberChart) {
       existingMemberChart.destroy();
-    }
-
-    const existingEventChart = window.Chart.getChart('eventChart');
-    if (existingEventChart) {
-      existingEventChart.destroy();
     }
 
     // Üye Artış Grafiği
@@ -391,45 +372,6 @@ const AdminDashboard = () => {
               beginAtZero: true,
               ticks: {
                 stepSize: 1
-              }
-            }
-          }
-        }
-      });
-    }
-
-    // Etkinlik Katılım Grafiği
-    const eventCtx = document.getElementById('eventChart');
-    if (eventCtx) {
-      new window.Chart(eventCtx, {
-        type: 'bar',
-        data: {
-          labels: categoryLabels,
-          datasets: [{
-            label: 'Katılımcı Sayısı',
-            data: categoryData,
-            backgroundColor: [
-              '#f66962',
-              '#685f78',
-              '#28a745',
-              '#17a2b8',
-              '#ffc107'
-            ]
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                stepSize: 5
               }
             }
           }
@@ -553,13 +495,13 @@ const AdminDashboard = () => {
               <ul>
                 <li className={activeTab === 'dashboard' ? 'active' : ''}>
                   <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('dashboard'); }}>
-                    <i className='bx bx-dashboard'></i>
+                    <i className='bx bx-home'></i>
                     <span>Dashboard</span>
                   </a>
                 </li>
                 <li className={activeTab === 'members' ? 'active' : ''}>
                   <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('members'); }}>
-                    <i className='bx bx-users'></i>
+                    <i className='bx bx-group'></i>
                     <span>Üye Yönetimi</span>
                     {dashboardData.recentMembers.length > 0 && (
                       <span className="notification-count">{dashboardData.recentMembers.length}</span>
@@ -650,6 +592,7 @@ const AdminDashboard = () => {
           {/* Main Content */}
           <div className="admin-main-content">
             {/* Dashboard Tab */}
+            {/* Dashboard Tab */}
             {activeTab === 'dashboard' && (
               <div className="admin-content-section">
                 <div className="section-header">
@@ -661,10 +604,6 @@ const AdminDashboard = () => {
                     <button className="btn btn-outline" onClick={refreshDashboard}>
                       <i className='bx bx-refresh'></i>
                       Yenile
-                    </button>
-                    <button className="btn btn-outline">
-                      <i className='bx bx-download'></i>
-                      Rapor İndir
                     </button>
                   </div>
                 </div>
@@ -692,9 +631,7 @@ const AdminDashboard = () => {
                       ))}
                     </div>
 
-
-
-                    {/* ✅ YENİ: Aidat Özet Kartı */}
+                    {/* Aidat Özet Kartı */}
                     <div style={{
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       borderRadius: '20px',
@@ -878,12 +815,9 @@ const AdminDashboard = () => {
                       </div>
                     </div>
 
-                    {/* Grafikler Bölümü */}
-                    <div className="dashboard-charts"></div>
-
-                    {/* Grafikler Bölümü */}
+                    {/* Sadece Üye Artış Grafiği */}
                     <div className="dashboard-charts">
-                      <div className="chart-container">
+                      <div className="chart-container" style={{ maxWidth: '100%' }}>
                         <div className="chart-header">
                           <h3>Üye Artış Trendi (Son 6 Ay)</h3>
                           <select className="chart-filter">
@@ -893,147 +827,7 @@ const AdminDashboard = () => {
                         </div>
                         <canvas id="memberChart" height="80"></canvas>
                       </div>
-
-                      <div className="chart-container">
-                        <div className="chart-header">
-                          <h3>Etkinlik Katılımları</h3>
-                          <select className="chart-filter">
-                            <option>Bu Ay</option>
-                            <option>Geçen Ay</option>
-                          </select>
-                        </div>
-                        <canvas id="eventChart" height="80"></canvas>
-                      </div>
                     </div>
-
-                    {/* Takvim ve Aktivite Widget'ları */}
-                    <div className="dashboard-widgets">
-                      {/* Takvim Widget */}
-                      <div className="widget-card calendar-widget">
-                        <div className="widget-header">
-                          <h3>
-                            <i className='bx bx-calendar'></i>
-                            Yaklaşan Etkinlikler
-                          </h3>
-                          <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab('programs'); }}>
-                            Tümünü Gör
-                          </a>
-                        </div>
-                        <div className="calendar-events">
-                          {dashboardData.recentPrograms?.length > 0 ? (
-                            dashboardData.recentPrograms.map((program) => (
-                              <div key={program._id} className="calendar-event-item">
-                                <div className="event-date">
-                                  <span className="day">
-                                    {new Date(program.dateTime).getDate()}
-                                  </span>
-                                  <span className="month">
-                                    {new Date(program.dateTime).toLocaleString('tr-TR', { month: 'short' }).toUpperCase()}
-                                  </span>
-                                </div>
-                                <div className="event-details">
-                                  <h4>{program.title}</h4>
-                                  <p>
-                                    <i className='bx bx-time'></i>
-                                    {new Date(program.dateTime).toLocaleTimeString('tr-TR', {
-                                      hour: '2-digit',
-                                      minute: '2-digit'
-                                    })}
-                                  </p>
-                                  <span className="event-category">{program.category}</span>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="no-events">Yaklaşan etkinlik yok</p>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Aktivite Timeline */}
-                      <div className="widget-card activity-widget">
-                        <div className="widget-header">
-                          <h3>
-                            <i className='bx bx-time-five'></i>
-                            Son Aktiviteler
-                          </h3>
-                        </div>
-                        <div className="activity-timeline">
-                          {dashboardData.recentActivities?.length > 0 ? (
-                            dashboardData.recentActivities.map((activity, index) => (
-                              <div key={index} className="timeline-item">
-                                <div className={`timeline-icon ${activity.type}`}>
-                                  <i className={`bx ${activity.type === 'member' ? 'bx-user-plus' :
-                                    activity.type === 'news' ? 'bx-news' :
-                                      activity.type === 'event' ? 'bx-calendar-event' :
-                                        'bx-info-circle'
-                                    }`}></i>
-                                </div>
-                                <div className="timeline-content">
-                                  <p>{activity.message}</p>
-                                  <span className="timeline-time">{activity.timeAgo}</span>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="no-activity">Henüz aktivite yok</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* En Popüler İçerikler */}
-                    <div className="popular-content">
-                      <div className="widget-header">
-                        <h3>
-                          <i className='bx bx-trending-up'></i>
-                          En Popüler İçerikler
-                        </h3>
-                      </div>
-                      <div className="popular-grid">
-                        <div className="popular-card">
-                          <h4>En Çok Görüntülenen Haberler</h4>
-                          <div className="popular-list">
-                            {dashboardData.recentNews?.length > 0 ? (
-                              dashboardData.recentNews.slice(0, 5).map((news, index) => (
-                                <div key={news._id} className="popular-item">
-                                  <span className="rank">#{index + 1}</span>
-                                  <div className="item-info">
-                                    <p>{news.title}</p>
-                                    <span>{news.views || 0} görüntüleme</span>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <p className="no-data">Henüz haber yok</p>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="popular-card">
-                          <h4>Aktif Etkinlikler</h4>
-                          <div className="popular-list">
-                            {dashboardData.recentPrograms?.length > 0 ? (
-                              dashboardData.recentPrograms.slice(0, 5).map((program, index) => (
-                                <div key={program._id} className="popular-item">
-                                  <span className="rank">#{index + 1}</span>
-                                  <div className="item-info">
-                                    <p>{program.title}</p>
-                                    <span>
-                                      {program.registration?.currentParticipants || 0}/
-                                      {program.registration?.maxParticipants || 0} katılımcı
-                                    </span>
-                                  </div>
-                                </div>
-                              ))
-                            ) : (
-                              <p className="no-data">Henüz etkinlik yok</p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
                   </>
                 )}
               </div>
