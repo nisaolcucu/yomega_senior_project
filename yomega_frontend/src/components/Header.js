@@ -27,7 +27,6 @@ export default function Header() {
   useEffect(() => {
     const checkAuth = () => {
       if (typeof window !== 'undefined') {
-        // Hem localStorage hem sessionStorage'ı kontrol et
         const token = localStorage.getItem('token') || sessionStorage.getItem('token')
         const userDataStored = localStorage.getItem('user') || sessionStorage.getItem('user')
         const adminDataStored = localStorage.getItem('admin') || sessionStorage.getItem('admin')
@@ -66,7 +65,6 @@ export default function Header() {
 
     checkAuth()
 
-    // Storage değişikliklerini dinle (diğer tab'lardan çıkış yapıldığında)
     const handleStorageChange = (e) => {
       if (e.key === 'token' || e.key === 'user' || e.key === 'admin') {
         checkAuth()
@@ -87,7 +85,6 @@ export default function Header() {
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
-      // Hem localStorage hem sessionStorage'ı temizle
       localStorage.removeItem('token')
       localStorage.removeItem('user')
       localStorage.removeItem('admin')
@@ -119,24 +116,49 @@ export default function Header() {
 
   return (
     <header className={`header ${isSticky ? 'sticky' : ''}`}>
-      <Link href="/" onClick={closeMenu} className="logo" style={{
-        fontSize: '28px',
-        fontWeight: '800',
-        color: 'var(--main-color)',
-        textDecoration: 'none',
-        letterSpacing: '-0.5px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px'
-      }}>
-        <span style={{
-          background: 'linear-gradient(135deg, #f66962 0%, #f5576c 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
+      {/* ✅ YENİ LOGO - İkon + Yazı */}
+      <Link 
+        href="/" 
+        onClick={closeMenu} 
+        className="logo" 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          textDecoration: 'none'
+        }}
+      >
+        {/* Logo İkonu */}
+        <div style={{
+          position: 'relative',
+          width: '45px',
+          height: '45px',
+          flexShrink: 0
         }}>
-          YÖMEGA
-        </span>
+          <Image 
+            src="/images/yomega-icon.png" // ✅ İlk görseli buraya koy
+            alt="YÖMEGA Logo"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
+
+        {/* Logo Yazısı */}
+        <div style={{
+          position: 'relative',
+          width: '140px',
+          height: '35px',
+          flexShrink: 0
+        }}>
+          <Image 
+            src="/images/yomega-text.png" // ✅ İkinci görseli buraya koy
+            alt="YÖMEGA"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
       </Link>
 
       <nav className={`navbar ${isMenuOpen ? 'open' : ''}`}>
@@ -175,7 +197,7 @@ export default function Header() {
           <i className='bx bx-search'></i>
         </button>
 
-        {/* User Menu - HER ZAMAN AYNI YER */}
+        {/* User Menu */}
         {isAuthenticated ? (
           <div className="user-menu">
             <div className="user-info">
@@ -224,7 +246,7 @@ export default function Header() {
           </div>
         )}
 
-        {/* Hamburger menu - sadece mobile'da görünür */}
+        {/* Hamburger menu */}
         <div
           className="bx bx-menu menu-icon"
           onClick={toggleMenu}

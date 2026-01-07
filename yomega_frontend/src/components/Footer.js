@@ -5,36 +5,52 @@ import Image from 'next/image'
 
 export default function Footer() {
 
-
   return (
     <footer className="footer" id="footer" style={{ backgroundColor: '#2d2d2d', minHeight: '200px' }}>
       <div className="footer-top">
         <div className="footer-row">
           <div className="footer-col">
+            {/* ✅ YENİ LOGO - İkon + Yazı */}
             <Link
               href="/"
               className="logo"
               style={{
-                fontSize: '28px',
-                fontWeight: '800',
-                color: 'var(--main-color)',
-                textDecoration: 'none',
-                letterSpacing: '-0.5px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px'
+                gap: '12px',
+                textDecoration: 'none',
+                marginBottom: '15px'
               }}
             >
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #f66962 0%, #f5576c 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}
-              >
-                YÖMEGA
-              </span>
+              {/* Logo İkonu */}
+              <div style={{
+                position: 'relative',
+                width: '45px',
+                height: '45px',
+                flexShrink: 0
+              }}>
+                <Image 
+                  src="/images/yomega-icon.png" // ✅ İlk görseli buraya koy
+                  alt="YÖMEGA Logo"
+                  fill
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+
+              {/* Logo Yazısı */}
+              <div style={{
+                position: 'relative',
+                width: '140px',
+                height: '35px',
+                flexShrink: 0
+              }}>
+                <Image 
+                  src="/images/yomega-text.png" // ✅ İkinci görseli buraya koy
+                  alt="YÖMEGA"
+                  fill
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
             </Link>
 
             <p>
@@ -127,7 +143,6 @@ export default function Footer() {
               <i className='bx bx-phone'></i>
               <a href="tel:+903121234567" style={{ color: 'white' }}>+90 312 123 45 67</a>
             </p>
-
           </div>
         </div>
       </div>
@@ -146,16 +161,16 @@ export default function Footer() {
         <div className="footer-bottom-content">
           <div className="footer-bottom-links">
             Designed by
-            <a
-              href="https://www.linkedin.com/in/elif-nisa-ölçücü-08984023b/"
+            
+              <a href="https://www.linkedin.com/in/elif-nisa-ölçücü-08984023b/"
               target="_blank"
               rel="noopener noreferrer"
             >
               Elif Nisa Ölçücü
             </a>
             &amp;
-            <a
-              href="https://www.linkedin.com/in/fatma-betül-avcı-926b39254/"
+            
+             <a href="https://www.linkedin.com/in/fatma-betül-avcı-926b39254/"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -163,7 +178,6 @@ export default function Footer() {
             </a>
           </div>
         </div>
-
       </div>
     </footer>
   )

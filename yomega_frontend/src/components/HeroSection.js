@@ -16,15 +16,16 @@ export default function HeroSection() {
   }, [])
 
   return (
-    <section
-      className="home"
+    <section 
+      className="home" 
       id="home"
       style={{
         position: 'relative',
-        minHeight: '100vh',
+        minHeight: '100vh', // ✅ Minimum yükseklik
+        paddingBottom: '120px', // ✅ ALT TARAFA BOŞLUK EKLEDİK
         display: 'flex',
         alignItems: 'center',
-        overflow: 'hidden',
+        overflow: 'visible', // ✅ hidden → visible
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         paddingTop: '100px',
       }}
@@ -116,8 +117,8 @@ export default function HeroSection() {
             YÖMEGA
           </div>
 
-          <h1 style={{
-            fontSize: 'clamp(36px, 5vw, 64px)',
+          <h1 style={{ 
+            fontSize: 'clamp(36px, 5vw, 64px)', 
             lineHeight: '1.2',
             marginBottom: '20px',
             color: 'white',
@@ -134,23 +135,22 @@ export default function HeroSection() {
             </span><br />
             Ağı Derneği
           </h1>
-
-          <p style={{
-            fontSize: '18px',
+          
+          <p style={{ 
+            fontSize: '18px', 
             color: 'rgba(255,255,255,0.9)',
             marginBottom: '40px',
             lineHeight: '1.8',
             maxWidth: '600px'
           }}>
-            Aralık 2020'de yükseköğretim kurumlarında eğitim gelişimi ve öğretim elemanlarının
-            öğrenme ve öğretme konularında mesleki gelişimlerine destek olmayı amaçlayarak kurulan YÖMEGA
-            Türkiye'de yükseköğretim kurumlarında eğitimi geliştirme hedefini temsil etmektedir.
+            Türkiye'de yükseköğretim kurumlarında eğitim gelişimi ve öğretim elemanlarının 
+            mesleki gelişimini destekleyen öncü platform.
           </p>
 
           {/* CTA Buttons */}
           <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-            <Link
-              href="/uyelik-giris"
+            <Link 
+              href="/uyelik-giris" 
               style={{
                 padding: '16px 32px',
                 background: 'white',
@@ -178,7 +178,7 @@ export default function HeroSection() {
               Üye Ol
             </Link>
 
-            <Link
+            <Link 
               href="/program-konusmacilar"
               style={{
                 padding: '16px 32px',
@@ -211,43 +211,43 @@ export default function HeroSection() {
         </div>
 
         {/* Sağ Taraf - Interactive Cards */}
-        <div
-          style={{
-            position: 'relative',
+        <div 
+          style={{ 
+            position: 'relative', 
             height: '600px',
             display: 'flex',
-            alignItems: 'center', // ✅ Dikey ortalama
-            justifyContent: 'center' // ✅ Yatay ortalama
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           {/* 3D Card Stack */}
           {[
-            {
-              icon: 'bxs-graduation',
-              color: '#43e97b',
-              rotate: '-10deg',
-              normalTop: '50px', // ✅ ORTALANDI
+            { 
+              icon: 'bxs-graduation', 
+              color: '#43e97b', 
+              rotate: '-10deg', 
+              normalTop: '50px',
               hoverTop: '50px',
               title: 'Eğitim Gelişim',
               subtitle: 'Profesyonel programlar',
               type: 'text'
             },
-            {
-              icon: 'bxs-book-open',
-              color: '#38f9d7',
-              rotate: '5deg',
-              normalTop: '130px', // ✅ ORTALANDI
+            { 
+              icon: 'bxs-book-open', 
+              color: '#38f9d7', 
+              rotate: '5deg', 
+              normalTop: '130px',
               hoverTop: '220px',
               title: 'Kaynak Merkezi',
               subtitle: 'Zengin içerik kütüphanesi',
               type: 'text'
             },
-            {
+            { 
               type: 'image',
-              rotate: '-5deg',
-              normalTop: '210px', // ✅ ORTALANDI
+              rotate: '-5deg', 
+              normalTop: '210px',
               hoverTop: '390px',
               image: '/images/yomega_etkinlik.jpeg',
               title: 'Akademik İşbirliği'
@@ -256,14 +256,14 @@ export default function HeroSection() {
             <div key={i} style={{
               position: 'absolute',
               left: '50%',
-              transform: isHovered
-                ? `translateX(-50%) rotate(0deg)`
+              transform: isHovered 
+                ? `translateX(-50%) rotate(0deg)` 
                 : `translateX(-50%) rotate(${card.rotate})`,
               top: isHovered ? card.hoverTop : card.normalTop,
               width: '320px',
               height: '150px',
-              background: card.type === 'image'
-                ? 'none'
+              background: card.type === 'image' 
+                ? 'none' 
                 : 'rgba(255,255,255,0.15)',
               backdropFilter: 'blur(20px)',
               borderRadius: '20px',
@@ -280,7 +280,6 @@ export default function HeroSection() {
               zIndex: isHovered ? (10 - i) : i
             }}>
               {card.type === 'text' ? (
-                // Text Card
                 <>
                   <i className={`bx ${card.icon}`} style={{
                     fontSize: '50px',
@@ -288,7 +287,7 @@ export default function HeroSection() {
                     filter: 'drop-shadow(0 5px 15px rgba(0,0,0,0.3))',
                     transition: 'all 0.3s ease'
                   }}></i>
-
+                  
                   <div style={{ textAlign: 'center', color: 'white', padding: '0 20px' }}>
                     <h3 style={{
                       fontSize: '20px',
@@ -309,18 +308,16 @@ export default function HeroSection() {
                   </div>
                 </>
               ) : (
-                // Image Card
                 <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-                  <Image
+                  <Image 
                     src={card.image}
                     alt={card.title}
                     fill
-                    style={{
+                    style={{ 
                       objectFit: 'cover',
                       borderRadius: '18px'
                     }}
                   />
-                  {/* Overlay */}
                   <div style={{
                     position: 'absolute',
                     bottom: 0,
@@ -358,7 +355,8 @@ export default function HeroSection() {
         alignItems: 'center',
         gap: '10px',
         color: 'rgba(255,255,255,0.7)',
-        animation: 'bounce 2s ease-in-out infinite'
+        animation: 'bounce 2s ease-in-out infinite',
+        zIndex: 10 // ✅ Üstte kalsın
       }}>
         <span style={{ fontSize: '14px', fontWeight: '600' }}>Aşağı Kaydır</span>
         <i className='bx bx-chevron-down' style={{ fontSize: '24px' }}></i>
@@ -387,6 +385,7 @@ export default function HeroSection() {
           }
           section {
             padding-top: 120px !important;
+            padding-bottom: 150px !important; /* Mobilde daha fazla */
           }
         }
       `}</style>
