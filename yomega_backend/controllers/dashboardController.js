@@ -131,8 +131,8 @@ const getAdminStats = async (req, res) => {
       isApproved: true,  // ✅ YENİ: Sadece onaylı üyeler
       hasPaid: false
     });
-    // ✅ GELİR HESAPLAMA (Her üye 500₺)
-    const totalRevenue = paidUsers * 500;
+    // ✅ GELİR HESAPLAMA (Her üye 600₺)
+    const totalRevenue = paidUsers * 600;
     const paymentRate = totalUsers > 0 ? ((paidUsers / totalUsers) * 100).toFixed(1) : 0;
 
     // Diğer istatistikler

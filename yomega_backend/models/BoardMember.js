@@ -12,25 +12,19 @@ const boardMemberSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Pozisyon gereklidir'],
     enum: [
-      // Yönetim Kurulu Asil
-    'başkan',
-    'başkan yardımcısı',
-    'genel sekreter',
-    'sayman',
-    'üye',
-    
-    // Yönetim Kurulu Yedek
-    'yedek üye',
-    
-    // Denetim Kurulu Asil
-    'denetim kurulu başkanı',
-    'denetim kurulu üyesi',
-    
-    // Denetim Kurulu Yedek
-    'denetim kurulu yedek üyesi',
-    
-    // Kurucu
-    'kurucu üye'
+      // Yönetim Kurulu
+      'başkan',
+      'başkan yardımcısı',
+      'genel sekreter',
+      'sayman',
+      'üye',
+      
+      // Denetim Kurulu
+      'denetim kurulu başkanı',
+      'denetim kurulu üyesi',
+      
+      // Kurucu
+      'kurucu üye'
     ]
   },
   bio: {
@@ -147,8 +141,9 @@ boardMemberSchema.virtual('positionLevel').get(function() {
     'genel sekreter': 3,
     'sayman': 4,
     'üye': 5,
-    'denetleme kurulu üyesi': 6,
-    'danışman': 7
+    'denetim kurulu başkanı': 6,
+    'denetim kurulu üyesi': 7,
+    'kurucu üye': 8
   };
   return hierarchy[this.position] || 99;
 });
@@ -196,8 +191,9 @@ boardMemberSchema.virtual('positionTurkish').get(function() {
     'genel sekreter': 'Genel Sekreter',
     'sayman': 'Sayman',
     'üye': 'Üye',
-    'denetleme kurulu üyesi': 'Denetleme Kurulu Üyesi',
-    'danışman': 'Danışman'
+    'denetim kurulu başkanı': 'Denetim Kurulu Başkanı',
+    'denetim kurulu üyesi': 'Denetim Kurulu Üyesi',
+    'kurucu üye': 'Kurucu Üye'
   };
   return positions[this.position] || this.position;
 });

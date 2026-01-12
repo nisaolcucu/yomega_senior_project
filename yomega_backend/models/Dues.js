@@ -13,7 +13,7 @@ const duesSchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: true,
-    default: 500
+    default: 600
   },
   isPaid: {
     type: Boolean,

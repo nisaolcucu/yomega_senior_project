@@ -71,7 +71,7 @@ const getDuesByYear = async (req, res) => {
         email: member.email
       },
       year: parseInt(year),
-      amount: 500,
+      amount: 600,
       isPaid: member.hasPaid || false,
       paidDate: member.hasPaid ? member.updatedAt : null,
       paymentMethod: member.hasPaid ? 'havale' : null,
@@ -174,7 +174,7 @@ const createDues = async (req, res) => {
     const duesData = {
       member,
       year,
-      amount: amount || 500,
+      amount: amount || 600,
       isPaid: isPaid || false,
       paymentMethod,
       notes,
@@ -260,7 +260,7 @@ const getDuesStats = async (req, res) => {
       hasPaid: false
     });
     
-    const totalAmount = paidDues * 500; // Her aidat 500₺
+    const totalAmount = paidDues * 600; // Her aidat 600₺
     const paymentRate = totalMembers > 0 ? ((paidDues / totalMembers) * 100).toFixed(1) : 0;
 
     console.log('📊 DUES STATS:', {

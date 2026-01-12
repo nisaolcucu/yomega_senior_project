@@ -30,36 +30,22 @@ export default function BoardMembersContent() {
     }
   }
 
-  // Position'a göre gruplama
   const groupByPosition = () => {
     const groups = {
-      yonetimAsil: [],      // Yönetim Kurulu Asil
-      yonetimYedek: [],     // Yönetim Kurulu Yedek
-      denetimAsil: [],      // Denetim Kurulu Asil
-      denetimYedek: [],     // Denetim Kurulu Yedek
-      kurucu: []            // Kurucu Yönetim Kurulu
+      yonetim: [],
+      denetim: [],
+      kurucu: []
     }
 
     boardMembers.forEach(member => {
       const pos = member.position.toLowerCase()
 
-      // Yönetim Kurulu Asil
-      if (['başkan', 'başkan yardımcısı', 'genel sekreter', 'sayman', 'üye'].includes(pos)) {
-        groups.yonetimAsil.push(member)
+      if (['başkan', 'başkan yardımcısı', 'genel sekreter', 'sayman', 'üye', 'yedek üye'].includes(pos)) {
+        groups.yonetim.push(member)
       }
-      // Yönetim Kurulu Yedek
-      else if (pos === 'yedek üye') {
-        groups.yonetimYedek.push(member)
+      else if (['denetim kurulu başkanı', 'denetim kurulu üyesi', 'denetim kurulu yedek üyesi'].includes(pos)) {
+        groups.denetim.push(member)
       }
-      // Denetim Kurulu Asil
-      else if (['denetim kurulu başkanı', 'denetim kurulu üyesi'].includes(pos)) {
-        groups.denetimAsil.push(member)
-      }
-      // Denetim Kurulu Yedek
-      else if (pos === 'denetim kurulu yedek üyesi') {
-        groups.denetimYedek.push(member)
-      }
-      // Kurucu
       else if (pos === 'kurucu üye') {
         groups.kurucu.push(member)
       }
@@ -71,25 +57,16 @@ export default function BoardMembersContent() {
   const groups = groupByPosition()
 
   const positionHierarchy = {
-    // Yönetim Kurulu Asil
     'başkan': 1,
     'başkan yardımcısı': 2,
     'genel sekreter': 3,
     'sayman': 4,
     'üye': 5,
-
-    // Yönetim Kurulu Yedek
-    'yedek üye': 10,
-
-    // Denetim Kurulu Asil
-    'denetim kurulu başkanı': 20,
-    'denetim kurulu üyesi': 21,
-
-    // Denetim Kurulu Yedek
-    'denetim kurulu yedek üyesi': 30,
-
-    // Kurucu
-    'kurucu üye': 40
+    'yedek üye': 6,
+    'denetim kurulu başkanı': 10,
+    'denetim kurulu üyesi': 11,
+    'denetim kurulu yedek üyesi': 12,
+    'kurucu üye': 20
   }
 
   const sortByPosition = (members) => {
@@ -119,7 +96,7 @@ export default function BoardMembersContent() {
   const renderMemberCard = (member) => (
     <div
       key={member._id}
-      onClick={() => setSelectedMember(member)}  // ← EKLE
+      onClick={() => setSelectedMember(member)}
       style={{
         background: 'white',
         borderRadius: '20px',
@@ -143,7 +120,6 @@ export default function BoardMembersContent() {
         e.currentTarget.style.borderColor = 'transparent'
       }}
     >
-      {/* Decorative gradient */}
       <div style={{
         position: 'absolute',
         top: 0,
@@ -153,8 +129,6 @@ export default function BoardMembersContent() {
         background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)'
       }}></div>
 
-      {/* Avatar */}
-      {/* Avatar */}
       <div style={{
         width: '100px',
         height: '100px',
@@ -165,23 +139,11 @@ export default function BoardMembersContent() {
           <img
             src={(() => {
               if (!member.image) return '';
-
               let imgPath = member.image;
-
-              // HTTP ile başlıyorsa direkt kullan
               if (imgPath.startsWith('http')) {
                 return imgPath;
               }
-
-              // ✅ HER TÜRLÜ DURUMU TEMİZLE
-              // /uploads/board-members//uploads/board-members/x.png → x.png
-              // /uploads/board-members/x.png → x.png
-              // x.png → x.png
-
-              // Son / işaretinden sonraki kısmı al (filename)
               const filename = imgPath.split('/').pop();
-
-              // Tam URL oluştur
               return `http://localhost:5001/uploads/board-members/${filename}`;
             })()}
             alt={member.name}
@@ -194,8 +156,6 @@ export default function BoardMembersContent() {
               boxShadow: '0 8px 20px rgba(102, 126, 234, 0.3)'
             }}
             onError={(e) => {
-              console.error('❌ Resim yüklenemedi:', member.image);
-              console.error('❌ Denenen URL:', e.target.src);
               e.target.style.display = 'none';
               const fallback = e.target.nextSibling;
               if (fallback) fallback.style.display = 'flex';
@@ -203,7 +163,6 @@ export default function BoardMembersContent() {
           />
         ) : null}
 
-        {/* Fallback Avatar (resim yoksa veya yüklenemezse) */}
         <div style={{
           width: '100%',
           height: '100%',
@@ -221,7 +180,7 @@ export default function BoardMembersContent() {
           {member.name.charAt(0).toUpperCase()}
         </div>
       </div>
-      {/* Name */}
+
       <h3 style={{
         fontSize: '22px',
         fontWeight: '700',
@@ -231,7 +190,6 @@ export default function BoardMembersContent() {
         {member.name}
       </h3>
 
-      {/* Position */}
       <div style={{
         display: 'inline-block',
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -245,7 +203,6 @@ export default function BoardMembersContent() {
         {formatPosition(member.position)}
       </div>
 
-      {/* Office */}
       {member.contact?.office && (
         <p style={{
           fontSize: '14px',
@@ -257,7 +214,6 @@ export default function BoardMembersContent() {
         </p>
       )}
 
-      {/* Bio */}
       {member.bio && (
         <p style={{
           fontSize: '14px',
@@ -273,7 +229,6 @@ export default function BoardMembersContent() {
         </p>
       )}
 
-      {/* Social Links */}
       <div style={{
         display: 'flex',
         gap: '10px',
@@ -281,8 +236,8 @@ export default function BoardMembersContent() {
         marginTop: '20px'
       }}>
         {member.contact?.email && (
-          <a
-            href={`mailto:${member.contact.email}`}
+
+          <a href={`mailto:${member.contact.email}`}
             style={{
               width: '40px',
               height: '40px',
@@ -308,8 +263,8 @@ export default function BoardMembersContent() {
           </a>
         )}
         {member.social?.linkedin && (
-          <a
-            href={member.social.linkedin}
+
+          <a href={member.social.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -335,7 +290,8 @@ export default function BoardMembersContent() {
           >
             <i className='bx bxl-linkedin'></i>
           </a>
-        )}
+        )
+        }
         {member.social?.twitter && (
           <a
             href={member.social.twitter}
@@ -394,8 +350,8 @@ export default function BoardMembersContent() {
             <i className='bx bx-globe'></i>
           </a>
         )}
-      </div>
-    </div>
+      </div >
+    </div >
   )
 
   if (loading) {
@@ -426,7 +382,6 @@ export default function BoardMembersContent() {
   return (
     <>
       <section style={{ padding: '100px 13% 80px', background: '#f8f9fa' }}>
-        {/* Hero Section */}
         <div className="center-text" style={{ marginBottom: '80px' }}>
           <h5 style={{
             color: 'var(--main-color)',
@@ -473,8 +428,7 @@ export default function BoardMembersContent() {
           </div>
         </div>
 
-        {/* Yönetim Kurulu Asil */}
-        {groups.yonetimAsil.length > 0 && (
+        {groups.yonetim.length > 0 && (
           <div style={{ marginBottom: '80px' }}>
             <div style={{
               textAlign: 'center',
@@ -494,7 +448,7 @@ export default function BoardMembersContent() {
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text'
                 }}>
-                  Yönetim Kurulu Asil
+                  Yönetim Kurulu
                 </span>
                 <div style={{
                   position: 'absolute',
@@ -513,60 +467,12 @@ export default function BoardMembersContent() {
               gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
               gap: '30px'
             }}>
-              {sortByPosition(groups.yonetimAsil).map(renderMemberCard)}
+              {sortByPosition(groups.yonetim).map(renderMemberCard)}
             </div>
           </div>
         )}
 
-        {/* Yönetim Kurulu Yedek */}
-        {groups.yonetimYedek.length > 0 && (
-          <div style={{ marginBottom: '80px' }}>
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '50px'
-            }}>
-              <h3 style={{
-                fontSize: '32px',
-                fontWeight: '700',
-                color: '#2d3748',
-                marginBottom: '10px',
-                position: 'relative',
-                display: 'inline-block'
-              }}>
-                <span style={{
-                  background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}>
-                  Yönetim Kurulu Yedek
-                </span>
-                <div style={{
-                  position: 'absolute',
-                  bottom: '-10px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '60px',
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #f093fb 0%, #f5576c 100%)',
-                  borderRadius: '2px'
-                }}></div>
-              </h3>
-            </div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '30px',
-              maxWidth: '900px',
-              margin: '0 auto'
-            }}>
-              {sortByPosition(groups.yonetimYedek).map(renderMemberCard)}
-            </div>
-          </div>
-        )}
-
-        {/* Denetim Kurulu Asil */}
-        {groups.denetimAsil.length > 0 && (
+        {groups.denetim.length > 0 && (
           <div style={{ marginBottom: '80px' }}>
             <div style={{
               textAlign: 'center',
@@ -586,7 +492,7 @@ export default function BoardMembersContent() {
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text'
                 }}>
-                  Denetim Kurulu Asil
+                  Denetim Kurulu
                 </span>
                 <div style={{
                   position: 'absolute',
@@ -607,59 +513,11 @@ export default function BoardMembersContent() {
               maxWidth: '900px',
               margin: '0 auto'
             }}>
-              {sortByPosition(groups.denetimAsil).map(renderMemberCard)}
+              {sortByPosition(groups.denetim).map(renderMemberCard)}
             </div>
           </div>
         )}
 
-        {/* Denetim Kurulu Yedek */}
-        {groups.denetimYedek.length > 0 && (
-          <div style={{ marginBottom: '80px' }}>
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '50px'
-            }}>
-              <h3 style={{
-                fontSize: '32px',
-                fontWeight: '700',
-                color: '#2d3748',
-                marginBottom: '10px',
-                position: 'relative',
-                display: 'inline-block'
-              }}>
-                <span style={{
-                  background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}>
-                  Denetim Kurulu Yedek
-                </span>
-                <div style={{
-                  position: 'absolute',
-                  bottom: '-10px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: '60px',
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #fa709a 0%, #fee140 100%)',
-                  borderRadius: '2px'
-                }}></div>
-              </h3>
-            </div>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '30px',
-              maxWidth: '900px',
-              margin: '0 auto'
-            }}>
-              {sortByPosition(groups.denetimYedek).map(renderMemberCard)}
-            </div>
-          </div>
-        )}
-
-        {/* Kurucu Yönetim Kurulu */}
         {groups.kurucu.length > 0 && (
           <div>
             <div style={{
@@ -680,7 +538,7 @@ export default function BoardMembersContent() {
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text'
                 }}>
-                  Kurucu Yönetim Kurulu
+                  Kurucu Heyet
                 </span>
                 <div style={{
                   position: 'absolute',
@@ -697,9 +555,7 @@ export default function BoardMembersContent() {
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '30px',
-              maxWidth: '900px',
-              margin: '0 auto'
+              gap: '30px'
             }}>
               {sortByPosition(groups.kurucu).map(renderMemberCard)}
             </div>
@@ -707,7 +563,6 @@ export default function BoardMembersContent() {
         )}
       </section>
 
-      {/* Member Detail Modal */}
       {selectedMember && (
         <div
           style={{
@@ -741,7 +596,6 @@ export default function BoardMembersContent() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
             <button
               onClick={() => setSelectedMember(null)}
               style={{
@@ -774,7 +628,6 @@ export default function BoardMembersContent() {
               ×
             </button>
 
-            {/* Header with Gradient */}
             <div style={{
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               padding: '50px 40px 30px',
@@ -782,7 +635,6 @@ export default function BoardMembersContent() {
               textAlign: 'center',
               position: 'relative'
             }}>
-              {/* Large Avatar */}
               <div style={{
                 width: '150px',
                 height: '150px',
@@ -793,18 +645,11 @@ export default function BoardMembersContent() {
                   <img
                     src={(() => {
                       if (!selectedMember.image) return '';
-
                       let imgPath = selectedMember.image;
-
-                      // HTTP ile başlıyorsa direkt kullan
                       if (imgPath.startsWith('http')) {
                         return imgPath;
                       }
-
-                      // ✅ Son / işaretinden sonraki kısmı al (filename)
                       const filename = imgPath.split('/').pop();
-
-                      // Tam URL oluştur
                       return `http://localhost:5001/uploads/board-members/${filename}`;
                     })()}
                     alt={selectedMember.name}
@@ -837,7 +682,6 @@ export default function BoardMembersContent() {
                 )}
               </div>
 
-              {/* Name */}
               <h2 style={{
                 fontSize: '32px',
                 fontWeight: '800',
@@ -847,7 +691,6 @@ export default function BoardMembersContent() {
                 {selectedMember.name}
               </h2>
 
-              {/* Position Badge */}
               <div style={{
                 display: 'inline-block',
                 background: 'white',
@@ -861,9 +704,7 @@ export default function BoardMembersContent() {
               </div>
             </div>
 
-            {/* Content */}
             <div style={{ padding: '40px' }}>
-              {/* Bio */}
               {selectedMember.bio && (
                 <div style={{ marginBottom: '30px' }}>
                   <h3 style={{
@@ -888,7 +729,6 @@ export default function BoardMembersContent() {
                 </div>
               )}
 
-              {/* Contact Info */}
               <div style={{ marginBottom: '30px' }}>
                 <h3 style={{
                   fontSize: '18px',
@@ -904,8 +744,8 @@ export default function BoardMembersContent() {
                 </h3>
 
                 {selectedMember.contact?.email && (
-                  <a
-                    href={`mailto:${selectedMember.contact.email}`}
+
+                  <a href={`mailto:${selectedMember.contact.email}`}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -933,8 +773,8 @@ export default function BoardMembersContent() {
                 )}
 
                 {selectedMember.contact?.phone && (
-                  <a
-                    href={`tel:${selectedMember.contact.phone}`}
+
+                  <a href={`tel:${selectedMember.contact.phone}`}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -977,7 +817,6 @@ export default function BoardMembersContent() {
                 )}
               </div>
 
-              {/* Social Links */}
               {(selectedMember.social?.linkedin || selectedMember.social?.twitter || selectedMember.social?.website) && (
                 <div style={{ marginBottom: '30px' }}>
                   <h3 style={{
@@ -994,8 +833,7 @@ export default function BoardMembersContent() {
                   </h3>
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     {selectedMember.social?.linkedin && (
-                      <a
-                        href={selectedMember.social.linkedin}
+                      <a href={selectedMember.social.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -1019,8 +857,8 @@ export default function BoardMembersContent() {
                       </a>
                     )}
                     {selectedMember.social?.twitter && (
-                      <a
-                        href={selectedMember.social.twitter}
+
+                      <a href={selectedMember.social.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -1044,8 +882,8 @@ export default function BoardMembersContent() {
                       </a>
                     )}
                     {selectedMember.social?.website && (
-                      <a
-                        href={selectedMember.social.website}
+
+                      <a href={selectedMember.social.website}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -1072,7 +910,6 @@ export default function BoardMembersContent() {
                 </div>
               )}
 
-              {/* Term Dates */}
               {(selectedMember.startDate || selectedMember.endDate) && (
                 <div style={{
                   padding: '20px',
@@ -1099,26 +936,26 @@ export default function BoardMembersContent() {
                 </div>
               )}
             </div>
-          </div>
-        </div>
+          </div >
+        </div >
       )}
 
       <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from { 
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to { 
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `}</style>
     </>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import AdminHeader from '@/components/AdminHeader'
+//import AdminHeader from '@/components/AdminHeader'
 import DuesManagementSystem from '@/components/DuesManagementSystem'
 
 export default function AidatTakipPage() {

@@ -28,14 +28,18 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'
 
+  // ✅ GÜNCELLENMIŞ POSITIONS - YEDEK YAZILARI KALDIRILDI
   const positions = [
     'başkan',
     'başkan yardımcısı',
     'genel sekreter',
     'sayman',
     'üye',
-    'denetleme kurulu üyesi',
-    'danışman'
+    'yedek üye',
+    'denetim kurulu başkanı',
+    'denetim kurulu üyesi',
+    'denetim kurulu yedek üyesi',
+    'kurucu üye'
   ]
 
   useEffect(() => {
@@ -85,13 +89,11 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
   const handleFileSelect = (e) => {
     const file = e.target.files[0]
     if (file) {
-      // Dosya boyutu kontrolü (5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('Dosya boyutu 5MB\'dan büyük olamaz!')
         return
       }
 
-      // Dosya türü kontrolü
       if (!file.type.startsWith('image/')) {
         alert('Sadece resim dosyası yükleyebilirsiniz!')
         return
@@ -99,7 +101,6 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
 
       setSelectedFile(file)
 
-      // Preview için
       const reader = new FileReader()
       reader.onload = (e) => {
         setFormData(prev => ({ ...prev, imagePreview: e.target.result }))
@@ -118,7 +119,6 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
       const photoFormData = new FormData()
       photoFormData.append('image', selectedFile)
 
-      // YENİ: folder parametresi ekle
       const response = await fetch(`${API_URL}/upload/image?folder=board-members`, {
         method: 'POST',
         headers: {
@@ -156,10 +156,9 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
       const token = localStorage.getItem('token')
       let imageUrl = formData.image
 
-      // Eğer yeni fotoğraf seçildiyse yükle
       if (selectedFile) {
         imageUrl = await uploadPhoto()
-        if (!imageUrl) return // Upload başarısız olursa işlemi durdur
+        if (!imageUrl) return
       }
 
       const url = editingMember
@@ -210,7 +209,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
   }
 
   const handleEdit = (member) => {
-    console.log('Editing member:', member) // Debug için
+    console.log('Editing member:', member)
 
     setEditingMember(member)
     setFormData({
@@ -230,7 +229,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
       displayOrder: member.displayOrder || 0,
       image: member.image || null
     })
-    setSelectedFile(null) // Yeni fotoğraf seçimini temizle
+    setSelectedFile(null)
     setShowForm(true)
   }
 
@@ -251,7 +250,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
 
       if (response.ok) {
         alert('Yönetim kurulu üyesi kalıcı olarak silindi!');
-        fetchBoardMembers(); // Listeyi yenile
+        fetchBoardMembers();
       } else {
         alert('Silme işlemi başarısız!');
       }
@@ -281,7 +280,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
       imagePreview: null
     })
     setSelectedFile(null)
-    setEditingMember(null) // ← EKLE
+    setEditingMember(null)
   }
 
   const handleInputChange = (e) => {
@@ -359,7 +358,6 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
                   {new Date(member.startDate).toLocaleDateString('tr-TR')}
                 </span>
 
-                {/* Sosyal medya linkleri */}
                 {(member.social?.linkedin || member.social?.twitter) && (
                   <div className="social-links" style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
                     {member.social?.linkedin && (
@@ -425,7 +423,6 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
             </div>
 
             <form onSubmit={handleSubmit}>
-              {/* Fotoğraf Yükleme */}
               <div className="form-group">
                 <label>Profil Fotoğrafı</label>
                 <input
@@ -488,27 +485,22 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
                     required
                     style={{ fontSize: '15px' }}
                   >
+                    {/* ✅ GÜNCELLENMIŞ SELECT - ASIL/YEDEK YAZILARI KALDIRILDI */}
                     <optgroup label="🏛️ Başkanlık">
                       <option value="başkan">Başkan</option>
                       <option value="başkan yardımcısı">Başkan Yardımcısı</option>
                     </optgroup>
 
-                    <optgroup label="👥 Yönetim Kurulu Asil">
+                    <optgroup label="👥 Yönetim Kurulu">
                       <option value="genel sekreter">Genel Sekreter</option>
                       <option value="sayman">Sayman</option>
                       <option value="üye">Üye</option>
-                    </optgroup>
-
-                    <optgroup label="📋 Yönetim Kurulu Yedek">
                       <option value="yedek üye">Yedek Üye</option>
                     </optgroup>
 
-                    <optgroup label="🔍 Denetim Kurulu Asil">
+                    <optgroup label="🔍 Denetim Kurulu">
                       <option value="denetim kurulu başkanı">Denetim Kurulu Başkanı</option>
                       <option value="denetim kurulu üyesi">Denetim Kurulu Üyesi</option>
-                    </optgroup>
-
-                    <optgroup label="🔎 Denetim Kurulu Yedek">
                       <option value="denetim kurulu yedek üyesi">Denetim Kurulu Yedek Üyesi</option>
                     </optgroup>
 
@@ -517,7 +509,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
                     </optgroup>
                   </select>
                   <small style={{ color: '#666', marginTop: '8px', display: 'block' }}>
-                    ℹ️ Position web sitesinde otomatik olarak gruplandırılacak
+                    ℹ️ Pozisyon web sitesinde otomatik olarak gruplandırılacak
                   </small>
                 </div>
               </div>

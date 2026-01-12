@@ -6,7 +6,7 @@ export default function DuesManagementSystem({ activeTab }) {
   const [dues, setDues] = useState([])
   const [loading, setLoading] = useState(false)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
-  const [filterStatus, setFilterStatus] = useState('all') // all, paid, unpaid
+  const [filterStatus, setFilterStatus] = useState('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [stats, setStats] = useState({
     totalMembers: 0,
@@ -72,6 +72,7 @@ export default function DuesManagementSystem({ activeTab }) {
       console.error('Fetch stats error:', error)
     }
   }
+
   const handleTogglePaid = async (due) => {
     try {
       const token = localStorage.getItem('token');
@@ -83,7 +84,6 @@ export default function DuesManagementSystem({ activeTab }) {
         newStatus: !due.isPaid
       });
       
-      // ✅ User tablosunda hasPaid'i güncelle
       const response = await fetch(`${API_URL}/users/${due.member._id}`, {
         method: 'PUT',
         headers: {
@@ -127,7 +127,6 @@ export default function DuesManagementSystem({ activeTab }) {
         formData
       });
       
-      // ✅ User tablosunda hasPaid'i güncelle
       const response = await fetch(`${API_URL}/users/${editingDue.member._id}`, {
         method: 'PUT',
         headers: {
@@ -158,13 +157,10 @@ export default function DuesManagementSystem({ activeTab }) {
     }
   };
 
-  // Filtreleme
   const filteredDues = dues.filter(due => {
-    // Durum filtresi
     if (filterStatus === 'paid' && !due.isPaid) return false
     if (filterStatus === 'unpaid' && due.isPaid) return false
 
-    // Arama filtresi
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase()
       return (
@@ -187,7 +183,6 @@ export default function DuesManagementSystem({ activeTab }) {
         </div>
       </div>
 
-      {/* İstatistikler */}
       <div className="stats-grid" style={{ marginBottom: '30px' }}>
         <div className="stat-card">
           <div className="stat-icon" style={{ backgroundColor: '#667eea20', color: '#667eea' }}>
@@ -231,7 +226,6 @@ export default function DuesManagementSystem({ activeTab }) {
         </div>
       </div>
 
-      {/* Filtreler */}
       <div className="filter-bar" style={{
         display: 'flex',
         gap: '15px',
@@ -303,7 +297,6 @@ export default function DuesManagementSystem({ activeTab }) {
         </div>
       </div>
 
-      {/* Tablo */}
       {loading ? (
         <div className="loading-container">
           <div className="loading-spinner"></div>
@@ -395,7 +388,6 @@ export default function DuesManagementSystem({ activeTab }) {
         </div>
       )}
 
-      {/* Düzenleme Modalı */}
       {showAddModal && editingDue && (
         <DuesEditModal
           due={editingDue}
@@ -410,11 +402,11 @@ export default function DuesManagementSystem({ activeTab }) {
   )
 }
 
-// Düzenleme Modal Component
+// ✅ GÜNCELLENMIŞ MODAL - 600₺
 function DuesEditModal({ due, onClose, onSave }) {
   const [formData, setFormData] = useState({
     isPaid: due.isPaid || false,
-    amount: due.amount || 500,
+    amount: due.amount || 600, // ✅ DEĞİŞTİ: 500 → 600
     paidDate: due.paidDate ? new Date(due.paidDate).toISOString().split('T')[0] : '',
     paymentMethod: due.paymentMethod || 'havale',
     notes: due.notes || ''
