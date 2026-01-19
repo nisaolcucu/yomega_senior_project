@@ -6,12 +6,17 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
- // CORS ayarları
+
+// Trust proxy for Plesk/nginx
+app.set('trust proxy', 1);
+
+// CORS ayarları
 app.use(cors({
   origin: [
     'http://localhost:3000',  // Next.js development
     'http://localhost:3001',  // Alternatif port
-    
+    'https://api-yomega-senior-project.onrender.com',  // ← Render frontend URL'iniz
+
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -63,10 +68,10 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Test route
 app.get('/', (req, res) => {
-  res.json({ 
+  res.json({
     message: '🚀 Dernek Backend API çalışıyor!',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV 
+    environment: process.env.NODE_ENV
   });
 });
 
@@ -115,8 +120,8 @@ app.use('/api/stats', statsRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
     uptime: process.uptime(),
     memory: process.memoryUsage(),
@@ -126,21 +131,21 @@ app.get('/api/health', (req, res) => {
 
 // 404 handler - Özel route tanımlaması yapmadan önce
 app.use((req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     success: false,
     message: 'API endpoint bulunamadı',
-    path: req.originalUrl 
+    path: req.originalUrl
   });
 });
 
 // Error handler
 app.use((error, req, res, next) => {
   console.error('❌ Server Error:', error);
-  res.status(500).json({ 
+  res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' 
-      ? 'Bir hata oluştu' 
-      : error.message 
+    message: process.env.NODE_ENV === 'production'
+      ? 'Bir hata oluştu'
+      : error.message
   });
 });
 
