@@ -1202,10 +1202,10 @@ const UserDashboard = () => {
                         flexWrap: 'wrap',
                         gap: '15px'
                       }}>
-                        <span>TR44 0001 0000 0000 0000 0000 00</span>
+                        <span>TR44 0001 0008 3097 9454 9450 01</span>
                         <button
                           onClick={() => {
-                            navigator.clipboard.writeText('TR44000100000000000000000')
+                            navigator.clipboard.writeText('TR44 0001 0008 3097 9454 9450 01')
                             alert('✅ IBAN numarası kopyalandı!')
                           }}
                           style={{
