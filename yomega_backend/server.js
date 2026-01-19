@@ -15,7 +15,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',  // Next.js development
     'http://localhost:3001',  // Alternatif port
-    'https://api-yomega-senior-project.onrender.com',  // ← Render frontend URL'iniz
+    'https://yomega-senior-project.onrender.com',  // ← Render frontend URL'iniz
 
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
