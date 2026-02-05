@@ -348,7 +348,7 @@ export default function SignedFormsManagement({ activeTab, setActiveTab }) {
                                         justifyContent: 'end'
                                     }}>
 
-                                        <a href={`http://localhost:5001${form.membershipForm?.signedPdfUrl}`}
+                                        <a href={form.membershipForm?.signedPdfUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             style={{

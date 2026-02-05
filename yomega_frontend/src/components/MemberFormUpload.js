@@ -139,8 +139,8 @@ export default function MemberFormUpload() {
                         marginBottom: '15px'
                     }}>
                         <i className={`bx ${formStatus.signedPdfStatus === 'approved' ? 'bx-check-circle' :
-                                formStatus.signedPdfStatus === 'rejected' ? 'bx-x-circle' :
-                                    'bx-time'
+                            formStatus.signedPdfStatus === 'rejected' ? 'bx-x-circle' :
+                                'bx-time'
                             }`} style={{ fontSize: '48px' }}></i>
                         <div>
                             <h3 style={{ margin: 0, fontSize: '22px', fontWeight: '700' }}>
@@ -167,7 +167,7 @@ export default function MemberFormUpload() {
                     )}
 
 
-                    <a href={`http://localhost:5001${formStatus.signedPdfUrl}`}
+                    <a href={formStatus.signedPdfUrl} 
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{

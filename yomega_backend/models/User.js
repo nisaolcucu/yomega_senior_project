@@ -175,6 +175,10 @@ const userSchema = new mongoose.Schema({
       type: String,
       default: null
     },
+    cloudinaryPublicId: {  // ✅ YENİ EKLE
+    type: String,
+    default: null
+    },
     signedPdfUploadedAt: {
       type: Date,
       default: null

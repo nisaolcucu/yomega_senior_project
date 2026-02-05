@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const { authenticate, requireAdmin } = require('../middleware/auth');
+const { cloudinary, upload } = require('../config/cloudinary'); // ✅ YENİ
 const {
   uploadSignedForm,
   getMyFormStatus,
@@ -12,45 +10,16 @@ const {
   deleteSignedForm
 } = require('../controllers/membershipFormController');
 
-// Uploads klasörünü kontrol et ve oluştur
-const uploadDir = path.join(__dirname, '../uploads/signed-forms');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log('✅ signed-forms klasörü oluşturuldu');
-}
-
-// Multer config - İmzalı formlar için
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, `signed-form-${uniqueSuffix}${ext}`);
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  // Sadece PDF kabul et
-  if (file.mimetype === 'application/pdf') {
-    cb(null, true);
-  } else {
-    cb(new Error('Sadece PDF dosyaları kabul edilir'), false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { 
-    fileSize: 5 * 1024 * 1024 // 5MB limit
-  }
-});
+// ❌ ESKİ MULTER KODLARI SİL - ARTIK GEREKMİYOR
+// const multer = require('multer');
+// const path = require('path');
+// const fs = require('fs');
+// const uploadDir = ...
+// const storage = ...
 
 // Error handler for multer
 const multerErrorHandler = (error, req, res, next) => {
-  if (error instanceof multer.MulterError) {
+  if (error instanceof require('multer').MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
       return res.status(400).json({
         success: false,
@@ -75,11 +44,11 @@ const multerErrorHandler = (error, req, res, next) => {
 
 // ===== ÜYE ROUTES =====
 
-// İmzalı form yükle
+// İmzalı form yükle (Cloudinary ile)
 router.post(
   '/upload', 
   authenticate, 
-  upload.single('signedForm'),
+  upload.single('signedForm'), // ✅ Cloudinary upload
   multerErrorHandler,
   uploadSignedForm
 );

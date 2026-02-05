@@ -165,7 +165,7 @@ export default function EventDetailPage() {
                                         src={
                                             program.image.startsWith('http')
                                                 ? program.image
-                                                : `http://localhost:5001${program.image.startsWith('/') ? program.image : '/' + program.image}`
+                                                : `${API_URL.replace('/api', '')}${program.image.startsWith('/') ? program.image : '/' + program.image}`
                                         }
                                         alt={program.title}
                                         style={{

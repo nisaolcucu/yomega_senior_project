@@ -144,7 +144,7 @@ export default function BoardMembersContent() {
                 return imgPath;
               }
               const filename = imgPath.split('/').pop();
-              return `http://localhost:5001/uploads/board-members/${filename}`;
+              return `${API_URL.replace('/api', '')}/uploads/board-members/${filename}`;
             })()}
             alt={member.name}
             style={{
@@ -650,7 +650,7 @@ export default function BoardMembersContent() {
                         return imgPath;
                       }
                       const filename = imgPath.split('/').pop();
-                      return `http://localhost:5001/uploads/board-members/${filename}`;
+                      return `${API_URL.replace('/api', '')}/uploads/board-members/${filename}`;
                     })()}
                     alt={selectedMember.name}
                     style={{

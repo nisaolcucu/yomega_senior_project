@@ -199,7 +199,7 @@ export default function AuthContent() {
 
           // PDF'i otomatik indir
           // ✅ DÜZELTME: /api prefix'i kaldır
-          const pdfDownloadUrl = `http://localhost:5001${result.data.pdfUrl}`
+          const pdfDownloadUrl = `${API_URL.replace('/api', '')}${result.data.pdfUrl}`
 
           // Yeni sekmede aç (tarayıcı otomatik indirecek)
           const link = document.createElement('a')

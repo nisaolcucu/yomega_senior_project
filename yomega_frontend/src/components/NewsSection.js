@@ -16,7 +16,7 @@ export default function NewsSection() {
     try {
       setLoading(true)
       const response = await fetch(`${API_URL}/news`)
-      
+
       if (response.ok) {
         const data = await response.json()
         setNews((data.data.news || []).slice(0, 3))
@@ -51,8 +51,8 @@ export default function NewsSection() {
           margin: '20px auto 0',
           lineHeight: '1.7'
         }}>
-          YÖMEGA'nın faaliyetleri, yükseköğretimde eğitim gelişimi alanındaki güncel gelişmeler 
-          ve derneğimizin katıldığı ulusal ve uluslararası etkinlikler hakkında en son haberleri 
+          YÖMEGA'nın faaliyetleri, yükseköğretimde eğitim gelişimi alanındaki güncel gelişmeler
+          ve derneğimizin katıldığı ulusal ve uluslararası etkinlikler hakkında en son haberleri
           buradan takip edebilirsiniz.
         </p>
       </div>
@@ -73,8 +73,8 @@ export default function NewsSection() {
             margin: '0 auto'
           }}>
             {news.length > 0 ? news.map((item) => (
-              <div 
-                key={item._id} 
+              <div
+                key={item._id}
                 style={{
                   background: 'white',
                   borderRadius: '20px',
@@ -101,8 +101,8 @@ export default function NewsSection() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: item.image 
-                    ? `url(${item.image.startsWith('http') ? item.image : `http://localhost:5001${item.image}`})` 
+                  background: item.image
+                    ? `url(${item.image.startsWith('http') ? item.image : `${API_URL.replace('/api', '')}${item.image}`})`
                     : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center'
@@ -111,18 +111,18 @@ export default function NewsSection() {
                     <i className='bx bx-news' style={{ fontSize: '48px', color: 'white' }}></i>
                   )}
                 </div>
-                
+
                 {/* İçerik */}
-                <div style={{ 
+                <div style={{
                   padding: '25px',
                   display: 'flex',
                   flexDirection: 'column',
                   flexGrow: 1
                 }}>
                   {/* Badges */}
-                  <div style={{ 
-                    display: 'flex', 
-                    gap: '8px', 
+                  <div style={{
+                    display: 'flex',
+                    gap: '8px',
                     marginBottom: '15px',
                     flexWrap: 'wrap'
                   }}>
@@ -149,7 +149,7 @@ export default function NewsSection() {
                       </span>
                     )}
                   </div>
-                  
+
                   {/* Başlık */}
                   <h3 style={{
                     fontSize: '20px',
@@ -165,10 +165,10 @@ export default function NewsSection() {
                   }}>
                     {item.title}
                   </h3>
-                  
+
                   {/* Özet */}
-                  <p style={{ 
-                    fontSize: '14px', 
+                  <p style={{
+                    fontSize: '14px',
                     color: '#718096',
                     lineHeight: '1.6',
                     marginBottom: '15px',
@@ -201,8 +201,8 @@ export default function NewsSection() {
                   </div>
 
                   {/* Buton */}
-                  <Link 
-                     href={`/haberler/${item.slug || item._id}`}
+                  <Link
+                    href={`/haberler/${item.slug || item._id}`}
                     className="btn"
                     style={{ marginTop: 'auto' }}
                   >
@@ -220,8 +220,8 @@ export default function NewsSection() {
 
           {news.length > 0 && (
             <div style={{ textAlign: 'center', marginTop: '40px' }}>
-              <Link 
-                href="/haberler" 
+              <Link
+                href="/haberler"
                 className="btn"
                 style={{
                   display: 'inline-flex',

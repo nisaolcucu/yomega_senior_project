@@ -165,7 +165,7 @@ export default function NewsDetailPage() {
                             src={
                                 news.image.startsWith('http')
                                     ? news.image
-                                    : `http://localhost:5001${news.image.startsWith('/') ? news.image : '/' + news.image}`
+                                    : `${API_URL.replace('/api', '')}${news.image.startsWith('/') ? news.image : '/' + news.image}`
                             }
                             alt={news.title}
                             style={{
