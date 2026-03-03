@@ -147,7 +147,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-  
+
   // ✅ YENİ: Üyelik formu bilgileri
   membershipForm: {
     // Otomatik oluşturulan PDF (kayıt sırasında)
@@ -159,7 +159,7 @@ const userSchema = new mongoose.Schema({
       type: Date,
       default: null
     },
-    
+
     // Manuel yüklenen form (kayıt için)
     uploadedManualPdfUrl: {
       type: String,
@@ -169,15 +169,15 @@ const userSchema = new mongoose.Schema({
       type: Date,
       default: null
     },
-    
+
     // İmzalı form (üye olduktan sonra yüklenir)
     signedPdfUrl: {
       type: String,
       default: null
     },
     cloudinaryPublicId: {  // ✅ YENİ EKLE
-    type: String,
-    default: null
+      type: String,
+      default: null
     },
     signedPdfUploadedAt: {
       type: Date,
@@ -209,36 +209,30 @@ const userSchema = new mongoose.Schema({
 });
 
 // Indexes
-userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
 userSchema.index({ isActive: 1 });
 userSchema.index({ 'membershipForm.signedPdfStatus': 1 }); // ✅ YENİ INDEX
 
 // Virtual fields
-userSchema.virtual('membershipDays').get(function() {
+userSchema.virtual('membershipDays').get(function () {
   return Math.floor((Date.now() - this.joinDate) / (1000 * 60 * 60 * 24));
 });
 
 // ✅ YENİ: İmzalı form yüklü mü kontrolü
-userSchema.virtual('hasSignedForm').get(function() {
+userSchema.virtual('hasSignedForm').get(function () {
   return !!this.membershipForm?.signedPdfUrl;
 });
 
 // Şifre hash'leme middleware
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const saltRounds = 12;
-    this.password = await bcrypt.hash(this.password, saltRounds);
-    next();
-  } catch (error) {
-    next(error);
-  }
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
+
+  const saltRounds = 12;
+  this.password = await bcrypt.hash(this.password, saltRounds);
 });
 
 // Instance methods
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
@@ -246,16 +240,16 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   }
 };
 
-userSchema.methods.updateLastLogin = async function() {
+userSchema.methods.updateLastLogin = async function () {
   this.lastLogin = new Date();
   return await this.save({ validateBeforeSave: false });
 };
 
-userSchema.methods.isAdmin = function() {
+userSchema.methods.isAdmin = function () {
   return this.role === 'admin';
 };
 
-userSchema.methods.toSafeObject = function() {
+userSchema.methods.toSafeObject = function () {
   const user = this.toObject();
   delete user.password;
   delete user.emailVerificationToken;
@@ -265,20 +259,20 @@ userSchema.methods.toSafeObject = function() {
 };
 
 // Static methods
-userSchema.statics.findByEmail = function(email) {
+userSchema.statics.findByEmail = function (email) {
   return this.findOne({ email: email.toLowerCase() });
 };
 
-userSchema.statics.findActiveUsers = function() {
+userSchema.statics.findActiveUsers = function () {
   return this.find({ isActive: true }).select('-password');
 };
 
-userSchema.statics.findAdmins = function() {
+userSchema.statics.findAdmins = function () {
   return this.find({ role: 'admin', isActive: true }).select('-password');
 };
 
 // ✅ YENİ: İmzalı form yüklemeyen üyeleri bul
-userSchema.statics.findMembersWithoutSignedForm = function() {
+userSchema.statics.findMembersWithoutSignedForm = function () {
   return this.find({
     isApproved: true,
     'membershipForm.signedPdfUrl': null
@@ -286,7 +280,7 @@ userSchema.statics.findMembersWithoutSignedForm = function() {
 };
 
 // ✅ YENİ: Onay bekleyen imzalı formları bul
-userSchema.statics.findPendingSignedForms = function() {
+userSchema.statics.findPendingSignedForms = function () {
   return this.find({
     'membershipForm.signedPdfUrl': { $ne: null },
     'membershipForm.signedPdfStatus': 'pending'

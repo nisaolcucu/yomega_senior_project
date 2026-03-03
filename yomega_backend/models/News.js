@@ -73,10 +73,9 @@ newsSchema.index({ title: 'text', content: 'text' }); // Arama için
 newsSchema.index({ category: 1 });
 newsSchema.index({ publishDate: -1 });
 newsSchema.index({ isActive: 1 });
-newsSchema.index({ slug: 1 });
 
 // Slug oluşturma middleware
-newsSchema.pre('save', function(next) {
+newsSchema.pre('save', async function () {
   if (this.isModified('title') && !this.slug) {
     this.slug = this.title
       .toLowerCase()
@@ -90,11 +89,10 @@ newsSchema.pre('save', function(next) {
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '') + '-' + Date.now();
   }
-  next();
 });
 
 // Virtual - görüntüleme sayısı formatı
-newsSchema.virtual('formattedViews').get(function() {
+newsSchema.virtual('formattedViews').get(function () {
   if (this.views >= 1000) {
     return (this.views / 1000).toFixed(1) + 'K';
   }
@@ -102,27 +100,27 @@ newsSchema.virtual('formattedViews').get(function() {
 });
 
 // Static metodlar
-newsSchema.statics.findActiveNews = function() {
+newsSchema.statics.findActiveNews = function () {
   return this.find({ isActive: true })
-   // .populate('author', 'name')
+    // .populate('author', 'name')
     .sort({ publishDate: -1 });
 };
 
-newsSchema.statics.findFeaturedNews = function() {
+newsSchema.statics.findFeaturedNews = function () {
   return this.find({ isActive: true, isFeatured: true })
     .populate('author', 'name')
     .sort({ publishDate: -1 })
     .limit(3);
 };
 
-newsSchema.statics.findByCategory = function(category) {
+newsSchema.statics.findByCategory = function (category) {
   return this.find({ isActive: true, category })
     .populate('author', 'name')
     .sort({ publishDate: -1 });
 };
 
 // Instance metodlar
-newsSchema.methods.incrementViews = function() {
+newsSchema.methods.incrementViews = function () {
   this.views += 1;
   return this.save({ validateBeforeSave: false });
 };

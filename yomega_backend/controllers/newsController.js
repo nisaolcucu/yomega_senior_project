@@ -4,20 +4,20 @@ const News = require('../models/News');
 const getAllNews = async (req, res) => {
   try {
     const { page = 1, limit = 10, category, featured } = req.query;
-    
+
     let query = { isActive: true };
-    
+
     if (category) query.category = category;
     if (featured === 'true') query.isFeatured = true;
-    
+
     const news = await News.find(query)
       .populate('author', 'name')
       .sort({ publishDate: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
-    
+
     const total = await News.countDocuments(query);
-    
+
     res.json({
       success: true,
       data: {
@@ -29,7 +29,7 @@ const getAllNews = async (req, res) => {
         }
       }
     });
-    
+
   } catch (error) {
     console.error('Get All News Error:', error);
     res.status(500).json({
@@ -43,25 +43,25 @@ const getAllNews = async (req, res) => {
 const getNewsById = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const news = await News.findOne({ _id: id, isActive: true })
       .populate('author', 'name email');
-    
+
     if (!news) {
       return res.status(404).json({
         success: false,
         message: 'Haber bulunamadı'
       });
     }
-    
+
     // Görüntüleme sayısını artır
     await news.incrementViews();
-    
+
     res.json({
       success: true,
       data: { news }
     });
-    
+
   } catch (error) {
     console.error('Get News By ID Error:', error);
     res.status(500).json({
@@ -71,29 +71,39 @@ const getNewsById = async (req, res) => {
   }
 };
 
-// Slug ile haber getir (public)
+// Slug veya ID ile haber getir (public)
 const getNewsBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
-    
-    const news = await News.findOne({ slug, isActive: true })
+
+    // Eğer gelen değer bir MongoDB _id ise (24 karakter hex), hem ID hem slug ile ara
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(slug);
+
+    const query = { isActive: true };
+    if (isObjectId) {
+      query.$or = [{ _id: slug }, { slug: slug }];
+    } else {
+      query.slug = slug;
+    }
+
+    const news = await News.findOne(query)
       .populate('author', 'name email');
-    
+
     if (!news) {
       return res.status(404).json({
         success: false,
         message: 'Haber bulunamadı'
       });
     }
-    
+
     // Görüntüleme sayısını artır
     await news.incrementViews();
-    
+
     res.json({
       success: true,
       data: { news }
     });
-    
+
   } catch (error) {
     console.error('Get News By Slug Error:', error);
     res.status(500).json({
@@ -107,12 +117,12 @@ const getNewsBySlug = async (req, res) => {
 const getFeaturedNews = async (req, res) => {
   try {
     const news = await News.findFeaturedNews();
-    
+
     res.json({
       success: true,
       data: { news }
     });
-    
+
   } catch (error) {
     console.error('Get Featured News Error:', error);
     res.status(500).json({
@@ -127,16 +137,16 @@ const getNewsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
     const { page = 1, limit = 10 } = req.query;
-    
+
     const news = await News.findByCategory(category)
       .limit(limit * 1)
       .skip((page - 1) * limit);
-    
-    const total = await News.countDocuments({ 
-      isActive: true, 
-      category 
+
+    const total = await News.countDocuments({
+      isActive: true,
+      category
     });
-    
+
     res.json({
       success: true,
       data: {
@@ -149,7 +159,7 @@ const getNewsByCategory = async (req, res) => {
         }
       }
     });
-    
+
   } catch (error) {
     console.error('Get News By Category Error:', error);
     res.status(500).json({
@@ -163,28 +173,28 @@ const getNewsByCategory = async (req, res) => {
 const searchNews = async (req, res) => {
   try {
     const { q, page = 1, limit = 10 } = req.query;
-    
+
     if (!q) {
       return res.status(400).json({
         success: false,
         message: 'Arama terimi gereklidir'
       });
     }
-    
+
     const news = await News.find({
       isActive: true,
       $text: { $search: q }
     })
-    .populate('author', 'name')
-    .sort({ score: { $meta: 'textScore' }, publishDate: -1 })
-    .limit(limit * 1)
-    .skip((page - 1) * limit);
-    
+      .populate('author', 'name')
+      .sort({ score: { $meta: 'textScore' }, publishDate: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
     const total = await News.countDocuments({
       isActive: true,
       $text: { $search: q }
     });
-    
+
     res.json({
       success: true,
       data: {
@@ -197,7 +207,7 @@ const searchNews = async (req, res) => {
         }
       }
     });
-    
+
   } catch (error) {
     console.error('Search News Error:', error);
     res.status(500).json({
@@ -221,14 +231,14 @@ const createNews = async (req, res) => {
       isFeatured,
       metaDescription
     } = req.body;
-    
+
     if (!title || !content) {
       return res.status(400).json({
         success: false,
         message: 'Başlık ve içerik gereklidir'
       });
     }
-    
+
     const newsData = {
       title: title.trim(),
       content: content.trim(),
@@ -236,28 +246,28 @@ const createNews = async (req, res) => {
       category: category || 'genel',
       isFeatured: Boolean(isFeatured)
     };
-    
+
     if (summary) newsData.summary = summary.trim();
     if (metaDescription) newsData.metaDescription = metaDescription.trim();
     if (tags && Array.isArray(tags)) {
       newsData.tags = tags.filter(tag => tag.trim().length > 0);
     }
-    
+
     const news = new News(newsData);
     await news.save();
-    
+
     // Populate author bilgisi
     await news.populate('author', 'name email');
-    
+
     res.status(201).json({
       success: true,
       message: 'Haber başarıyla oluşturuldu',
       data: { news }
     });
-    
+
   } catch (error) {
     console.error('Create News Error:', error);
-    
+
     if (error.name === 'ValidationError') {
       const message = Object.values(error.errors).map(err => err.message).join(', ');
       return res.status(400).json({
@@ -265,7 +275,7 @@ const createNews = async (req, res) => {
         message
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: 'Haber oluşturulurken hata oluştu'
@@ -278,34 +288,34 @@ const updateNews = async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
-    
+
     // Author'u değiştirmeye izin verme
     delete updateData.author;
     delete updateData.views;
     delete updateData.publishDate;
-    
+
     const news = await News.findByIdAndUpdate(
       id,
       updateData,
       { new: true, runValidators: true }
     ).populate('author', 'name email');
-    
+
     if (!news) {
       return res.status(404).json({
         success: false,
         message: 'Haber bulunamadı'
       });
     }
-    
+
     res.json({
       success: true,
       message: 'Haber başarıyla güncellendi',
       data: { news }
     });
-    
+
   } catch (error) {
     console.error('Update News Error:', error);
-    
+
     if (error.name === 'ValidationError') {
       const message = Object.values(error.errors).map(err => err.message).join(', ');
       return res.status(400).json({
@@ -313,7 +323,7 @@ const updateNews = async (req, res) => {
         message
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: 'Haber güncellenirken hata oluştu'
@@ -326,22 +336,22 @@ const updateNews = async (req, res) => {
 const deleteNews = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // ✅ DB'den tamamen sil (Hard Delete)
     const news = await News.findByIdAndDelete(id);
-    
+
     if (!news) {
       return res.status(404).json({
         success: false,
         message: 'Haber bulunamadı'
       });
     }
-    
+
     res.json({
       success: true,
       message: 'Haber kalıcı olarak silindi'
     });
-    
+
   } catch (error) {
     console.error('Delete News Error:', error);
     res.status(500).json({
@@ -355,21 +365,21 @@ const deleteNews = async (req, res) => {
 const getAllNewsAdmin = async (req, res) => {
   try {
     const { page = 1, limit = 10, status, category } = req.query;
-    
+
     let query = {};
-    
+
     if (status === 'active') query.isActive = true;
     if (status === 'inactive') query.isActive = false;
     if (category) query.category = category;
-    
+
     const news = await News.find(query)
       .populate('author', 'name email')
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit);
-    
+
     const total = await News.countDocuments(query);
-    
+
     res.json({
       success: true,
       data: {
@@ -381,7 +391,7 @@ const getAllNewsAdmin = async (req, res) => {
         }
       }
     });
-    
+
   } catch (error) {
     console.error('Get All News Admin Error:', error);
     res.status(500).json({
@@ -399,7 +409,7 @@ module.exports = {
   getFeaturedNews,
   getNewsByCategory,
   searchNews,
-  
+
   // Admin endpoints
   createNews,
   updateNews,
