@@ -84,10 +84,10 @@ export default function BoardMembersContent() {
       'genel sekreter': 'Genel Sekreter',
       'sayman': 'Sayman',
       'üye': 'Üye',
-      'yedek üye': 'Yedek Üye',
+      'yedek üye': 'Üye',
       'denetim kurulu başkanı': 'Denetim Kurulu Başkanı',
       'denetim kurulu üyesi': 'Denetim Kurulu Üyesi',
-      'denetim kurulu yedek üyesi': 'Denetim Kurulu Yedek Üyesi',
+      'denetim kurulu yedek üyesi': 'Denetim Kurulu Üyesi',
       'kurucu üye': 'Kurucu Üye'
     }
     return positions[position.toLowerCase()] || position
