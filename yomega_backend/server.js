@@ -12,7 +12,7 @@ app.set('trust proxy', 1);
 
 // CORS ayarları
 app.use(cors({
-  origin: ['https://yomega-senior-project.onrender.com'],
+  origin: ['https://yomega-senior-project.onrender.com','https://yomega-senior-project-1.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
   credentials: true,
