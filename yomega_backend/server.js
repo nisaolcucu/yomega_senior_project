@@ -12,14 +12,9 @@ app.set('trust proxy', 1);
 
 // CORS ayarları
 app.use(cors({
-  origin: [
-    'http://localhost:3000',  // Next.js development
-    'http://localhost:3001',  // Alternatif port
-    'https://yomegaproject.vercel.app',  // ← Render frontend URL'iniz
-
-  ],
+  origin: ['https://yomega-senior-project.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
   credentials: true,
   exposedHeaders: ['Content-Length', 'Content-Type'] // ← EKLE
 }));
