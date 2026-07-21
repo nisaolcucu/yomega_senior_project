@@ -129,19 +129,27 @@ const deleteUploadedFile = async (req, res) => {
       });
     }
     
-    const filePath = folder 
-      ? path.join(folder, filename)
-      : path.join('uploads/temp', filename);
+    const safeFolder = folder || 'uploads/temp';
+    const filePath = path.join(safeFolder, filename);
+    const resolvedPath = path.resolve(filePath);
+    const resolvedUploadsDir = path.resolve('uploads');
+    
+    if (!resolvedPath.startsWith(resolvedUploadsDir)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Geçersiz dosya yolu'
+      });
+    }
     
     // Dosya var mı kontrol et
-    if (!fs.existsSync(filePath)) {
+    if (!fs.existsSync(resolvedPath)) {
       return res.status(404).json({
         success: false,
         message: 'Dosya bulunamadı'
       });
     }
     
-    await deleteFile(filePath);
+    await deleteFile(resolvedPath);
     
     res.json({
       success: true,
@@ -163,18 +171,26 @@ const getFileInfo = async (req, res) => {
     const { filename } = req.params;
     const { folder } = req.query;
     
-    const filePath = folder 
-      ? path.join(folder, filename)
-      : path.join('uploads/temp', filename);
+    const safeFolder = folder || 'uploads/temp';
+    const filePath = path.join(safeFolder, filename);
+    const resolvedPath = path.resolve(filePath);
+    const resolvedUploadsDir = path.resolve('uploads');
     
-    if (!fs.existsSync(filePath)) {
+    if (!resolvedPath.startsWith(resolvedUploadsDir)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Geçersiz dosya yolu'
+      });
+    }
+    
+    if (!fs.existsSync(resolvedPath)) {
       return res.status(404).json({
         success: false,
         message: 'Dosya bulunamadı'
       });
     }
     
-    const stats = fs.statSync(filePath);
+    const stats = fs.statSync(resolvedPath);
     const ext = path.extname(filename);
     
     res.json({

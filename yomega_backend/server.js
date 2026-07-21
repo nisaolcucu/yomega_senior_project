@@ -11,12 +11,30 @@ const app = express();
 app.set('trust proxy', 1);
 
 // CORS ayarları
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : [
+      'https://yomega-senior-project.onrender.com',
+      'https://yomega-senior-project-1.onrender.com',
+      'http://localhost:3000',
+      'http://localhost:5001'
+    ];
+
 app.use(cors({
-  origin: ['https://yomega-senior-project.onrender.com','https://yomega-senior-project-1.onrender.com'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    } else {
+      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+      return callback(new Error(msg), false);
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
   credentials: true,
-  exposedHeaders: ['Content-Length', 'Content-Type'] // ← EKLE
+  exposedHeaders: ['Content-Length', 'Content-Type']
 }));
 
 // Middleware'ler

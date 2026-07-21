@@ -266,7 +266,7 @@ export default function AuthContent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: 'admin@test.com',
+          email: adminData.username,
           password: adminData.password
         })
       })
@@ -763,9 +763,9 @@ export default function AuthContent() {
             <h2>Yönetici Girişi</h2>
             <form onSubmit={handleAdminSubmit}>
               <div className="form-group">
-                <label htmlFor="admin-username">Kullanıcı Adı</label>
+                <label htmlFor="admin-username">E-posta</label>
                 <input
-                  type="text"
+                  type="email"
                   id="admin-username"
                   name="username"
                   value={adminData.username}
