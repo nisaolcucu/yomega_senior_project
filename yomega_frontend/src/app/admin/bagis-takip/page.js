@@ -9,17 +9,22 @@ export default function BagisTakipPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    const user = localStorage.getItem('user')
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+    const user = localStorage.getItem('user') || sessionStorage.getItem('user') || localStorage.getItem('admin') || sessionStorage.getItem('admin')
 
     if (!token || !user) {
-      router.push('/admin')
+      router.push('/uyelik-giris')
       return
     }
 
-    const userData = JSON.parse(user)
-    if (userData.role !== 'admin') {
-      router.push('/admin')
+    try {
+      const userData = JSON.parse(user)
+      if (userData.role !== 'admin' && !userData.isAdmin) {
+        router.push('/uyelik-giris')
+        return
+      }
+    } catch (e) {
+      router.push('/uyelik-giris')
       return
     }
 

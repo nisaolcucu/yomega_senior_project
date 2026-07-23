@@ -44,7 +44,7 @@ export default function AdminMessagesManagement({ activeTab }) {
     const fetchMessages = async () => {
         try {
             setLoading(true)
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
             let url = `${API_URL}/messages/admin/all`
             if (filter !== 'all') {
@@ -71,7 +71,7 @@ export default function AdminMessagesManagement({ activeTab }) {
 
     const fetchUsers = async () => {
         try {
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
             const response = await fetch(`${API_URL}/users`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -97,7 +97,7 @@ export default function AdminMessagesManagement({ activeTab }) {
 
         try {
             setSending(true)
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
             const response = await fetch(`${API_URL}/messages/announcement`, {
                 method: 'POST',
@@ -135,7 +135,7 @@ export default function AdminMessagesManagement({ activeTab }) {
 
         try {
             setSending(true)
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
             const response = await fetch(`${API_URL}/messages/direct`, {
                 method: 'POST',
@@ -173,7 +173,7 @@ export default function AdminMessagesManagement({ activeTab }) {
 
         try {
             setSending(true)
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
             const response = await fetch(`${API_URL}/messages/${selectedMessage._id}/reply`, {
                 method: 'POST',
@@ -204,7 +204,7 @@ export default function AdminMessagesManagement({ activeTab }) {
 
     const handleUpdateStatus = async (messageId, newStatus) => {
         try {
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
             const response = await fetch(`${API_URL}/messages/${messageId}/status`, {
                 method: 'PUT',
@@ -232,7 +232,7 @@ export default function AdminMessagesManagement({ activeTab }) {
         if (!confirm('Bu mesajı silmek istediğinize emin misiniz?')) return
 
         try {
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
             const response = await fetch(`${API_URL}/messages/${messageId}`, {
                 method: 'DELETE',

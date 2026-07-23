@@ -52,7 +52,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
     try {
       setLoading(true);
       
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       console.log('🔑 Token:', token ? 'Var' : 'Yok');
       
       const url = `${API_URL}/board-members/admin/all`;
@@ -114,7 +114,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
 
     try {
       setUploadingPhoto(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       const photoFormData = new FormData()
       photoFormData.append('image', selectedFile)
@@ -153,7 +153,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
     console.log('Selected file:', selectedFile)
 
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
       let imageUrl = formData.image
 
       if (selectedFile) {
@@ -239,7 +239,7 @@ export default function BoardManagementSystem({ activeTab, setActiveTab }) {
     if (!confirm(confirmMessage)) return;
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       const response = await fetch(`${API_URL}/board-members/${memberId}`, {
         method: 'DELETE',
         headers: {

@@ -47,22 +47,38 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const checkAuth = () => {
-      const adminDataStored = localStorage.getItem('admin');
+      const adminDataStored = localStorage.getItem('admin') || sessionStorage.getItem('admin');
+      const userDataStored = localStorage.getItem('user') || sessionStorage.getItem('user');
+      const tokenStored = localStorage.getItem('token') || sessionStorage.getItem('token');
 
+      let admin = null;
       if (adminDataStored) {
         try {
-          const admin = JSON.parse(adminDataStored);
-          if (admin.isAdmin && admin.isLoggedIn) {
-            setIsAuthenticated(true);
-            setAdminData(admin);
-            // Admin doğrulandıktan sonra dashboard verilerini çek
-            fetchDashboardData();
-          } else {
-            router.push('/uyelik-giris');
-          }
-        } catch (error) {
-          router.push('/uyelik-giris');
+          admin = JSON.parse(adminDataStored);
+        } catch (e) {
+          console.error('Admin data parse error:', e);
         }
+      } else if (userDataStored) {
+        try {
+          const user = JSON.parse(userDataStored);
+          if (user.role === 'admin') {
+            admin = {
+              ...user,
+              isAdmin: true,
+              isLoggedIn: true,
+              username: 'admin'
+            };
+          }
+        } catch (e) {
+          console.error('User data parse error:', e);
+        }
+      }
+
+      if (admin && (admin.isAdmin || admin.role === 'admin') && tokenStored) {
+        setIsAuthenticated(true);
+        setAdminData(admin);
+        // Admin doğrulandıktan sonra dashboard verilerini çek
+        fetchDashboardData();
       } else {
         router.push('/uyelik-giris');
       }
@@ -109,7 +125,7 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoadingDashboard(true);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
       if (!token) {
         console.error('Token bulunamadı');
@@ -388,6 +404,10 @@ const AdminDashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('admin');
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('admin');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
     router.push('/');
   };
 

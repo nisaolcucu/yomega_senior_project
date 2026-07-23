@@ -36,7 +36,7 @@ export default function ResourceManagementSystem({ activeTab, setActiveTab }) {
   const fetchResources = async () => {
     try {
       setLoading(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
       
       console.log('🔄 Kaynaklar getiriliyor...')
       console.log('Token var mı:', !!token)
@@ -105,7 +105,7 @@ export default function ResourceManagementSystem({ activeTab, setActiveTab }) {
     
     try {
       setUploadingFile(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
       
       let resourceData = {
         ...formData,
@@ -204,7 +204,7 @@ export default function ResourceManagementSystem({ activeTab, setActiveTab }) {
     try {
       console.log('🗑️ Kaynak siliniyor:', resourceId)
       
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
       const response = await fetch(`${API_URL}/resources/${resourceId}`, {
         method: 'DELETE',
         headers: {

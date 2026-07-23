@@ -30,7 +30,7 @@ export default function DuesManagementSystem({ activeTab }) {
   const fetchDues = async () => {
     try {
       setLoading(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       const response = await fetch(`${API_URL}/dues/year/${selectedYear}`, {
         headers: {
@@ -55,7 +55,7 @@ export default function DuesManagementSystem({ activeTab }) {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       const response = await fetch(`${API_URL}/dues/stats`, {
         headers: {
@@ -75,7 +75,7 @@ export default function DuesManagementSystem({ activeTab }) {
 
   const handleTogglePaid = async (due) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       
       console.log('🔄 Updating user hasPaid:', {
         userId: due.member._id,
@@ -119,7 +119,7 @@ export default function DuesManagementSystem({ activeTab }) {
 
   const handleSave = async (formData) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
       
       console.log('💾 Saving dues update:', {
         userId: editingDue.member._id,

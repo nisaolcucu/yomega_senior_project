@@ -31,7 +31,7 @@ export default function NewsManagementSystem({ activeTab, setActiveTab }) {
   const fetchNews = async () => {
     try {
       setLoading(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
       const response = await fetch(`${API_URL}/news/admin/all`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -54,7 +54,7 @@ export default function NewsManagementSystem({ activeTab, setActiveTab }) {
     e.preventDefault()
 
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       // YENİ: Görsel varsa önce yükle
       let imageUrl = formData.image
@@ -203,7 +203,7 @@ export default function NewsManagementSystem({ activeTab, setActiveTab }) {
 
     try {
       setUploadingImage(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       const formDataUpload = new FormData()
       formDataUpload.append('image', imageFile)

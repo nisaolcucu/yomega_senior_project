@@ -27,7 +27,7 @@ export default function DonationManagementSystem({ activeTab }) {
   const fetchDonations = async () => {
     try {
       setLoading(true)
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       const response = await fetch(`${API_URL}/donations`, {
         headers: {
@@ -52,7 +52,7 @@ export default function DonationManagementSystem({ activeTab }) {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       const response = await fetch(`${API_URL}/donations/stats`, {
         headers: {
@@ -76,7 +76,7 @@ export default function DonationManagementSystem({ activeTab }) {
     }
 
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       const response = await fetch(`${API_URL}/donations/${id}`, {
         method: 'DELETE',
@@ -106,7 +106,7 @@ export default function DonationManagementSystem({ activeTab }) {
 
   const handleSave = async (formData) => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
       if (editingDonation) {
         // Güncelle
