@@ -137,11 +137,7 @@ export default function Footer() {
             </p>
             <p>
               <i className='bx bx-envelope'></i>
-              <a href="mailto:info@yomega.org.tr" style={{ color: 'white' }}>info@yomega.org.tr</a>
-            </p>
-            <p>
-              <i className='bx bx-phone'></i>
-              <a href="tel:+903121234567" style={{ color: 'white' }}>+90 312 123 45 67</a>
+              <a href="mailto:bilgi@yomega.org" style={{ color: 'white' }}>bilgi@yomega.org</a>
             </p>
           </div>
         </div>
